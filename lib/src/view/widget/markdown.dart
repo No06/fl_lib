@@ -3,16 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_markdown/flutter_markdown.dart';
 
 final class SimpleMarkdown extends StatelessWidget {
+  final String data;
+  final MarkdownStyleSheet? styleSheet;
+  final void Function()? onOpenFail;
+  final bool selectable;
+
   const SimpleMarkdown({
     super.key,
     required this.data,
     this.styleSheet,
     this.onOpenFail,
+    this.selectable = false,
   });
-
-  final String data;
-  final MarkdownStyleSheet? styleSheet;
-  final void Function()? onOpenFail;
 
   @override
   Widget build(BuildContext context) {
@@ -25,12 +27,9 @@ final class SimpleMarkdown extends StatelessWidget {
         }
         onOpenFail?.call();
       },
-      styleSheet: styleSheet?.copyWith(
-            a: TextStyle(color: UIs.primaryColor),
-          ) ??
-          MarkdownStyleSheet(
-            a: TextStyle(color: UIs.primaryColor),
-          ),
+      selectable: selectable,
+      styleSheet: styleSheet?.copyWith(a: TextStyle(color: UIs.colorSeed)) ??
+          MarkdownStyleSheet(a: TextStyle(color: UIs.colorSeed)),
     );
   }
 }

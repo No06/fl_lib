@@ -1,26 +1,28 @@
 import 'package:fl_lib/fl_lib.dart';
-import 'package:flutter/foundation.dart';
+import 'package:fl_lib/src/res/l10n.dart';
 import 'package:flutter/material.dart';
 
 final class DebugPageArgs {
-  final ValueListenable<List<Widget>> notifier;
-  final void Function() onClear;
   final String? title;
 
   const DebugPageArgs({
-    required this.notifier,
-    required this.onClear,
     this.title,
   });
 }
 
 class DebugPage extends StatelessWidget {
-  final DebugPageArgs? args;
+  final DebugPageArgs args;
 
-  const DebugPage({super.key, this.args});
+  const DebugPage({super.key, required this.args});
+
+  static const route = AppRoute<void, DebugPageArgs>(
+    page: DebugPage.new,
+    path: '/debug',
+  );
 
   @override
   Widget build(BuildContext context) {
+    const pad = EdgeInsets.all(13);
     return Scaffold(
       appBar: CustomAppBar(
         leading: IconButton(
@@ -28,14 +30,30 @@ class DebugPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
         title: Text(
-          args?.title ?? 'Logs',
+          args.title ?? l10n.log,
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.black,
         actions: [
-          IconButton(
-            onPressed: args?.onClear,
+          const Btn.icon(
+            icon: Icon(Icons.copy, color: Colors.white, size: 20),
+            onTap: DebugProvider.copy,
+            padding: pad,
+          ),
+          Btn.icon(
+            onTap: () {
+              context.showRoundDialog(
+                title: 'Clear logs?',
+                actions: Btn.ok(
+                  onTap: () {
+                    DebugProvider.clear();
+                    context.pop();
+                  },
+                ).toList,
+              );
+            },
             icon: const Icon(Icons.delete, color: Colors.white),
+            padding: pad,
           ),
         ],
       ),
@@ -45,8 +63,6 @@ class DebugPage extends StatelessWidget {
   }
 
   Widget _buildTerminal(BuildContext context) {
-    final notifier = args?.notifier;
-    if (notifier == null) return UIs.placeholder;
     return Container(
       padding: const EdgeInsets.all(10),
       color: Colors.black,
@@ -55,13 +71,12 @@ class DebugPage extends StatelessWidget {
           color: Colors.white,
         ),
         child: ValBuilder(
-          listenable: notifier,
+          listenable: DebugProvider.widgets,
           builder: (widgets) {
+            if (widgets.isEmpty) return UIs.placeholder;
             return ListView.builder(
               itemCount: widgets.length,
-              itemBuilder: (context, index) {
-                return widgets[index];
-              },
+              itemBuilder: (_, index) => widgets[index],
             );
           },
         ),

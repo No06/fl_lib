@@ -33,7 +33,7 @@ class StoreSwitch extends StatelessWidget {
           builder: (value) {
             if (busy) {
               lastIsBusy = true;
-              return UIs.centerSizedLoadingSmall.paddingOnly(right: 17);
+              return SizedLoading.centerMedium.paddingOnly(right: 17);
             }
 
             final switcher = Switch(

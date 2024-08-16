@@ -2,26 +2,45 @@ import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_lib/src/res/l10n.dart';
 import 'package:flutter/material.dart';
 
-final class KvEditor extends StatefulWidget {
+final class KvEditorArgs {
   final Map<String, String> data;
-  final int kWidthFlex;
-  final int vWidthFlex;
   final Widget Function(String k, String v)? entryBuilder;
+
+  /// If not null, the actual stored key will be [prefix] + key. But it will
+  /// display as 'key'. Keys that don't start with [prefix] will be ignored.
+  /// eg.:
+  /// - prefix: 'a_', data: {'a_key': 'av', 'bkey': 'bv'}, only 'key' will be
+  /// displayed. When saved, it will be saved as 'a_key'. When user input 'key',
+  /// it will be saved as 'a_key'.
+  final String? prefix;
+
+  const KvEditorArgs({
+    required this.data,
+    this.entryBuilder,
+    this.prefix,
+  });
+}
+
+final class KvEditor extends StatefulWidget {
+  final KvEditorArgs args;
 
   const KvEditor({
     super.key,
-    required this.data,
-    this.kWidthFlex = 1,
-    this.vWidthFlex = 2,
-    this.entryBuilder,
+    required this.args,
   });
+
+  static const route = AppRoute<Map<String, String>, KvEditorArgs>(
+    page: KvEditor.new,
+    path: '/kv_editor',
+  );
 
   @override
   State<KvEditor> createState() => _KvEditorState();
 }
 
 class _KvEditorState extends State<KvEditor> {
-  late final Map<String, String> _map = Map.of(widget.data);
+  late final _args = widget.args;
+  late final Map<String, String> _map = _loadMap();
   final _listKey = GlobalKey<AnimatedListState>();
   late MediaQueryData _media;
 
@@ -54,7 +73,7 @@ class _KvEditorState extends State<KvEditor> {
         actions: [
           IconButton(onPressed: _onTapAdd, icon: const Icon(Icons.add)),
           IconButton(
-            onPressed: () => context.pop(_map),
+            onPressed: () => context.pop(_saveMap()),
             icon: const Icon(Icons.save),
           ),
         ],
@@ -64,7 +83,7 @@ class _KvEditorState extends State<KvEditor> {
   }
 
   Widget _buildItem(String k, String v, int idx, Animation<double> animation) {
-    return switch (widget.entryBuilder) {
+    return switch (_args.entryBuilder) {
       null => _buildDefaultItem(k, v, idx, animation),
       final func => func(k, v),
     };
@@ -88,9 +107,14 @@ class _KvEditorState extends State<KvEditor> {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          IconBtn(icon: Icons.edit, onTap: () => _onTapEdit(k, index)),
-          IconBtn(
-            icon: Icons.delete,
+          Btn.icon(
+            text: l10n.edit,
+            icon: const Icon(Icons.edit),
+            onTap: () => _onTapEdit(k, index),
+          ),
+          Btn.icon(
+            text: l10n.delete,
+            icon: const Icon(Icons.delete),
             onTap: () => _onTapDelete(k, index),
           ),
         ],
@@ -148,6 +172,8 @@ class _KvEditorState extends State<KvEditor> {
           Input(
             controller: ctrlV,
             hint: l10n.value,
+            maxLines: 5,
+            minLines: 1,
           ),
         ],
       ),
@@ -225,5 +251,23 @@ class _KvEditorState extends State<KvEditor> {
       _listKey.currentState
           ?.insertItem(_map.length - 1, duration: Durations.medium1);
     }
+  }
+
+  Map<String, String> _loadMap() {
+    final prefix = _args.prefix;
+    if (prefix == null) return Map<String, String>.from(_args.data);
+    final map = <String, String>{};
+    for (final entry in _args.data.entries) {
+      if (entry.key.startsWith(prefix)) {
+        map[entry.key.substring(prefix.length)] = entry.value;
+      }
+    }
+    return map;
+  }
+
+  Map<String, String> _saveMap() {
+    final prefix = _args.prefix;
+    if (prefix == null) return _map;
+    return _map.map((k, v) => MapEntry('$prefix$k', v));
   }
 }

@@ -78,8 +78,11 @@ abstract final class AppUpdate {
     final val = (changelogMap[_locale] ?? changelogMap['default'])
         as Map<String, dynamic>?;
     if (val == null) return null;
-    final buildStr = _build.toString();
-    final biggerKeys = val.keys.where((e) => e.compareTo(buildStr) > 0);
+    final biggerKeys = val.keys.where((e) {
+      final v = int.tryParse(e);
+      if (v == null) return false;
+      return v > _build;
+    });
     final sb = StringBuffer();
     final reversed = biggerKeys.toList().reversed.toList();
     final len = reversed.length;

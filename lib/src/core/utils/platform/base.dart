@@ -70,11 +70,11 @@ enum Pfs {
     String? path,
     Uint8List? bytes,
     String? content,
-    String? name,
+    String name = 'fl_lib_share',
     String? mime,
   }) async {
     if (path == null && bytes == null && content == null) {
-      throw ArgumentError('path or bytes or content is required');
+      throw ArgumentError('path / bytes / content is required');
     }
 
     if (isDesktop) {
@@ -82,11 +82,20 @@ enum Pfs {
         await revealPath(path);
       } else {
         final tempDir = Directory.systemTemp;
-        final file = File('${tempDir.path}/$name');
+        var file = File('${tempDir.path}/$name');
+        if (await file.exists()) {
+          final nameWithoutExt = name.split('.').firstOrNull ?? name;
+          final ext = name.split('.').lastOrNull ?? '';
+          var i = 1;
+          while (await file.exists()) {
+            file = File('${tempDir.path}/$nameWithoutExt-$i.$ext');
+            i++;
+          }
+        }
         if (bytes != null) {
           await file.writeAsBytes(bytes);
-        } else {
-          await file.writeAsString(content!);
+        } else if (content != null) {
+          await file.writeAsString(content);
         }
         await revealPath(file.path);
       }

@@ -1,7 +1,13 @@
+import 'dart:async';
+import 'dart:convert';
+import 'dart:typed_data';
+
 import 'package:choice/choice.dart';
+import 'package:dio/dio.dart';
 import 'package:fl_lib/fl_lib.dart';
 import 'package:fl_lib/src/res/l10n.dart';
 import 'package:flutter/material.dart';
+import 'package:icons_plus/icons_plus.dart';
 
 extension DialogX on BuildContext {
   Future<T?> showRoundDialog<T>({
@@ -12,15 +18,25 @@ extension DialogX on BuildContext {
     int? titleMaxLines,
     EdgeInsetsGeometry? actionsPadding,
     EdgeInsetsGeometry? contentPadding,
+    Widget? Function(BuildContext ctx)? titleBuilder,
+    Widget? Function(BuildContext ctx)? childBuilder,
+    List<Widget>? Function(BuildContext ctx)? actionsBuilder,
   }) async {
     return await showDialog<T>(
       context: this,
       barrierDismissible: barrierDismiss,
-      builder: (_) {
+      builder: (ctx) {
+        final title_ = switch (titleBuilder) {
+          null => title != null ? Text(title, maxLines: titleMaxLines) : null,
+          _ => titleBuilder(ctx),
+        };
+        final child_ = childBuilder?.call(ctx) ?? child;
+        final actions_ = actionsBuilder?.call(ctx) ?? actions;
+
         return AlertDialog(
-          title: title != null ? Text(title, maxLines: titleMaxLines) : null,
-          content: child,
-          actions: actions,
+          title: title_,
+          content: child_,
+          actions: actions_,
           actionsPadding: actionsPadding ?? const EdgeInsets.all(17),
           contentPadding: contentPadding,
         );
@@ -28,30 +44,35 @@ extension DialogX on BuildContext {
     );
   }
 
-  Future<T> showLoadingDialog<T>({
+  /// [timeout] is the timeout of the Future [fn] (default `null`).
+  ///
+  /// If an error occurs:
+  /// - the dialog will be closed and an error dialog will be displayed
+  /// - the [onErr] function will be called (awaited)
+  /// - the return value will be `null`
+  Future<Res<T>> showLoadingDialog<T>({
     required Future<T> Function() fn,
     bool barrierDismiss = false,
-    void Function(Object e, StackTrace s)? onErr,
+    FutureOr<void> Function(Object e, StackTrace s)? onErr,
+    Duration? timeout = const Duration(seconds: 30),
   }) async {
     showRoundDialog(
-      child: UIs.centerSizedLoading,
+      child: SizedLoading.centerMedium,
       barrierDismiss: barrierDismiss,
     );
 
-    try {
-      final ret = await fn();
+    return Resx.tryCatch(() async {
+      final ret = switch (timeout) {
+        null => await fn(),
+        _ => await fn().timeout(timeout),
+      };
       pop();
       return ret;
-    } catch (e, s) {
+    }, onErr: (e, s) {
       pop();
-
-      if (onErr != null) {
-        onErr(e, s);
-      } else {
-        showErrDialog(e: e, s: s);
-      }
-      rethrow;
-    }
+      showErrDialog(e, s);
+      onErr?.call(e, s);
+    });
   }
 
   static final _recoredPwd = <String, String>{};
@@ -83,8 +104,8 @@ extension DialogX on BuildContext {
 
   Future<List<T>?> showPickDialog<T>({
     String? title,
-    required List<T?> items,
-    String Function(T)? name,
+    required List<T> items,
+    String Function(T)? display,
     bool multi = true,
     List<T>? initial,
     bool clearable = false,
@@ -107,36 +128,32 @@ extension DialogX on BuildContext {
           multiple: multi,
           clearable: clearable,
           value: vals,
-          builder: (state, _) {
-            return Wrap(
-              children: List<Widget>.generate(
-                items.length,
-                (index) {
-                  final item = items[index];
-                  if (item == null) return UIs.placeholder;
-                  return ChoiceChipX<T>(
-                    label: name?.call(item) ?? item.toString(),
-                    state: state,
-                    value: item,
-                  );
-                },
-              ),
-            );
-          },
+          builder: (state, _) => Wrap(
+            children: List<Widget>.generate(
+              items.length,
+              (index) {
+                final item = items[index];
+                if (item == null) return UIs.placeholder;
+                return ChoiceChipX<T>(
+                  label: display?.call(item) ?? item.toString(),
+                  state: state,
+                  value: item,
+                );
+              },
+            ),
+          ),
         ),
       ),
       actions: btns.isEmpty ? null : btns,
     );
-    if (sure == true) {
-      return vals;
-    }
+    if (sure == true) return vals;
     return null;
   }
 
   Future<T?> showPickSingleDialog<T>({
     String? title,
-    required List<T?> items,
-    String Function(T)? name,
+    required List<T> items,
+    String Function(T)? display,
     T? initial,
     bool clearable = false,
     List<Widget>? actions,
@@ -144,7 +161,7 @@ extension DialogX on BuildContext {
     final vals = await showPickDialog<T>(
       title: title,
       items: items,
-      name: name,
+      display: display,
       multi: false,
       initial: initial == null ? null : [initial],
       actions: actions,
@@ -158,15 +175,15 @@ extension DialogX on BuildContext {
   Future<List<T>?> showPickWithTagDialog<T>({
     String? title,
     required List<T?> Function(String? tag) itemsBuilder,
-    required ValueNotifier<List<String>> tags,
-    String Function(T)? name,
+    required ValueNotifier<Set<String>> tags,
+    String Function(T)? display,
     List<T>? initial,
     bool clearable = false,
     bool multi = false,
     List<Widget>? actions,
   }) async {
     var vals = initial ?? <T>[];
-    final tag = ValueNotifier<String?>(null);
+    final tag = ''.vn;
     final media = MediaQuery.of(this);
     final sure = await showRoundDialog<bool>(
       title: title,
@@ -178,7 +195,6 @@ extension DialogX on BuildContext {
             listenable: tag,
             builder: (_, __) => TagSwitcher(
               tags: tags,
-              width: 300,
               initTag: tag.value,
               onTagChanged: (e) => tag.value = e,
             ),
@@ -204,7 +220,7 @@ extension DialogX on BuildContext {
                             final item = items[index];
                             if (item == null) return UIs.placeholder;
                             return ChoiceChipX<T>(
-                              label: name?.call(item) ?? item.toString(),
+                              label: display?.call(item) ?? item.toString(),
                               state: state,
                               value: item,
                             );
@@ -233,11 +249,11 @@ extension DialogX on BuildContext {
     return null;
   }
 
-  void showErrDialog({
-    required Object e,
-    required StackTrace s,
+  void showErrDialog([
+    Object? e,
+    StackTrace? s,
     String? operation,
-  }) {
+  ]) {
     showRoundDialog(
       title: operation ?? l10n.fail,
       child: SimpleMarkdown(data: '$e\n```\n$s\n```'),
@@ -249,4 +265,129 @@ extension DialogX on BuildContext {
       ],
     );
   }
+
+  /// Show a dialog to import data from file, network or clipboard.
+  /// - [title] is the title of the dialog
+  /// - [modelDef] is the [Map] definition of the model, it will be displayed like:
+  ///   ```jsonc
+  ///   {"name": "", "age": 0}
+  ///   ```
+  Future<Uint8List?> showImportDialog({
+    required String title,
+    Map<String, dynamic>? modelDef,
+  }) async {
+    title = '$title - ${l10n.import}';
+    final from = await showRoundDialog<_ImportFrom>(
+      title: title,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Btn.tile(
+            onTap: () => pop(_ImportFrom.file),
+            text: l10n.file,
+            icon: const Icon(MingCute.file_line),
+          ),
+          Btn.tile(
+            onTap: () => pop(_ImportFrom.network),
+            text: l10n.network,
+            icon: const Icon(ZondIcons.network),
+          ),
+          Btn.tile(
+            onTap: () => pop(_ImportFrom.clipboard),
+            text: l10n.clipboard,
+            icon: const Icon(MingCute.clipboard_line),
+          ),
+          if (modelDef != null)
+            ExpandTile(
+              title: Text(l10n.example),
+              children: [
+                SimpleMarkdown(
+                  data: '''
+```json
+[
+${const JsonEncoder.withIndent('\t\t').convert(modelDef)}
+]
+```''',
+                  selectable: true,
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+    if (from == null) return null;
+
+    switch (from) {
+      case _ImportFrom.file:
+        final file = await Pfs.pickFile();
+        if (file == null) return null;
+        return file.bytes;
+      case _ImportFrom.network:
+        final urlCtrl = TextEditingController();
+        final headersCtrl = TextEditingController();
+        await showRoundDialog(
+          title: title,
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Input(
+                  icon: ZondIcons.network,
+                  label: 'Url',
+                  hint: 'https://a.com',
+                  controller: urlCtrl,
+                  maxLines: 3,
+                  minLines: 1,
+                  onSubmitted: (p0) => pop(),
+                ),
+                UIs.height7,
+                Input(
+                  icon: HeroIcons.queue_list,
+                  label: 'Headers',
+                  hint: 'key1: value1\nkey2: value2',
+                  controller: headersCtrl,
+                  maxLines: 5,
+                  minLines: 2,
+                  onSubmitted: (p0) => pop(),
+                ),
+              ],
+            ),
+          ),
+          actions: Btnx.oks,
+        );
+        final url = urlCtrl.text;
+        final headers = <String, String>{};
+        try {
+          final lines = headersCtrl.text.split('\n');
+          for (final line in lines) {
+            final parts = line.split(':');
+            if (parts.length != 2) continue;
+            headers[parts[0].trim()] = parts[1].trim();
+          }
+        } catch (e, s) {
+          Loggers.app.warning('showImportDialog parse headers', e, s);
+        }
+        if (url.isEmpty) return null;
+        final resp = await myDio.get(
+          url,
+          options: Options(
+              headers: headers.isEmpty ? null : headers,
+              responseType: ResponseType.bytes),
+        );
+        return resp.data;
+      case _ImportFrom.clipboard:
+        final text = await Pfs.paste();
+        if (text == null) return null;
+        return Uint8List.fromList(text.codeUnits);
+      default:
+        throw Exception('Unknown import source: $from');
+    }
+  }
+}
+
+enum _ImportFrom {
+  file,
+  network,
+  clipboard,
+  ;
 }

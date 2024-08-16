@@ -1,3 +1,5 @@
+import 'package:fl_lib/fl_lib.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 import 'package:flutter_markdown_latex/flutter_markdown_latex.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'package:markdown/markdown.dart' as md;
@@ -24,4 +26,6 @@ abstract final class MarkdownUtils {
     md.ExtensionSet.gitHubFlavored.blockSyntaxes,
     [md.EmojiSyntax(), ...md.ExtensionSet.gitHubFlavored.inlineSyntaxes],
   );
+
+  static final defaultGrey = MarkdownStyleSheet(p: UIs.textGrey);
 }

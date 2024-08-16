@@ -1,7 +1,6 @@
 import 'dart:io';
 
 import 'package:fl_lib/fl_lib.dart';
-import 'package:fl_lib/src/res/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:window_manager/window_manager.dart';
@@ -69,45 +68,5 @@ abstract final class SystemUIs {
         windowManager.addListener(listener);
       }
     });
-  }
-}
-
-abstract final class Btns {
-  /// - [onTap] If return false, the dialog will not be closed.
-  static TextButton ok<T>({
-    bool red = false,
-    void Function()? onTap,
-  }) {
-    return TextButton(
-      onPressed: onTap?.call,
-      child: Text(l10n.ok, style: red ? UIs.textRed : null),
-    );
-  }
-
-  static TextButton cancel<T>({
-    void Function()? onTap,
-  }) {
-    return TextButton(
-      onPressed: onTap?.call,
-      child: Text(l10n.cancel),
-    );
-  }
-
-  static List<TextButton> oks<T>({
-    bool red = false,
-    void Function()? onTap,
-  }) {
-    return [ok(red: red, onTap: onTap)];
-  }
-
-  static List<TextButton> okCancels<T>({
-    void Function()? onTapOk,
-    void Function()? onTapCancel,
-    bool red = false,
-  }) {
-    return [
-      ok(onTap: onTapOk, red: red),
-      cancel(onTap: onTapCancel),
-    ];
   }
 }

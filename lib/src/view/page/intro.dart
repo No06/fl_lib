@@ -3,14 +3,25 @@ import 'package:flutter/material.dart';
 
 typedef IntroPageBuilder = Widget Function(BuildContext ctx, double padTop);
 
-final class IntroPage extends StatefulWidget {
+final class IntroPageArgs {
   final List<Widget> pages;
   final void Function(BuildContext context) onDone;
 
-  const IntroPage({super.key, required this.pages, required this.onDone});
+  const IntroPageArgs({required this.pages, required this.onDone});
+}
+
+final class IntroPage extends StatefulWidget {
+  final IntroPageArgs args;
+
+  const IntroPage({super.key, required this.args});
 
   @override
   State<IntroPage> createState() => _IntroPageState();
+
+  static const route = AppRoute<void, IntroPageArgs>(
+    page: IntroPage.new,
+    path: '/intro',
+  );
 
   static Widget title({IconData? icon, String? text, bool big = false}) {
     assert(icon != null || text != null);
@@ -30,7 +41,9 @@ final class IntroPage extends StatefulWidget {
     }
     if (!big) {
       child = Padding(
-          padding: const EdgeInsets.symmetric(vertical: 13), child: child);
+        padding: const EdgeInsets.symmetric(vertical: 13),
+        child: child,
+      );
     }
     return Center(child: child);
   }
@@ -39,7 +52,8 @@ final class IntroPage extends StatefulWidget {
 final class _IntroPageState extends State<IntroPage> {
   final _pageController = PageController();
   final _currentPage = 0.vn;
-  late final _pageCount = widget.pages.length;
+  late final _args = widget.args;
+  late final _pageCount = _args.pages.length;
 
   @override
   void dispose() {
@@ -54,7 +68,7 @@ final class _IntroPageState extends State<IntroPage> {
         controller: _pageController,
         itemCount: _pageCount,
         onPageChanged: (index) => _currentPage.value = index,
-        itemBuilder: (_, index) => widget.pages[index],
+        itemBuilder: (_, index) => _args.pages[index],
       ),
       bottomNavigationBar: BottomAppBar(
         child: Row(
@@ -112,7 +126,7 @@ final class _IntroPageState extends State<IntroPage> {
                     key: const Key('done'),
                     child: IconButton(
                       icon: const Icon(Icons.done),
-                      onPressed: () => widget.onDone(context),
+                      onPressed: () => _args.onDone(context),
                     ),
                   );
                 }

@@ -15,6 +15,7 @@ class CardX extends StatelessWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.all(Radius.circular(17)),
       ),
+      elevation: 0,
       child: child,
     );
   }

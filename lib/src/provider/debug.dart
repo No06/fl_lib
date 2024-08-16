@@ -5,32 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:logging/logging.dart';
 
 const _level2Color = {
-  'INFO': Colors.blue,
+  'INFO': Colors.cyan,
   'WARNING': Colors.yellow,
+  'ERROR': Color(0xffbb2d6f),
 };
 
-class DebugProvider {
-  final int maxLines;
-  final widgets = <Widget>[].vn;
+final class DebugProvider {
+  static const int maxLines = 100;
+  static final widgets = <Widget>[].vn;
+  static final lines = <String>[];
 
-  DebugProvider({this.maxLines = 100});
-
-  void addLog(LogRecord record) {
+  static void addLog(LogRecord record) {
     final color = _level2Color[record.level.name] ?? Colors.blue;
+    final title = '[${DateTime.now().hourMinute}][${record.loggerName}]';
+    final level = '[${record.level}]';
+    final message = record.error == null
+        ? '\n${record.message}'
+        : '\n${record.message}: ${record.error}';
+    lines.add('$title$level$message');
     widgets.value.add(Text.rich(TextSpan(
       children: [
+        TextSpan(text: title, style: TextStyle(color: color)),
+        TextSpan(text: level, style: TextStyle(color: color)),
         TextSpan(
-          text: '[${DateTime.now().hourMinute}][${record.loggerName}]',
-          style: const TextStyle(color: Colors.cyan),
-        ),
-        TextSpan(
-          text: '[${record.level}]',
-          style: TextStyle(color: color),
-        ),
-        TextSpan(
-          text: record.error == null
-              ? '\n${record.message}'
-              : '\n${record.message}: ${record.error}',
+          text: message,
           style: const TextStyle(color: Colors.white),
         ),
       ],
@@ -45,15 +43,21 @@ class DebugProvider {
       ));
     }
     widgets.value.add(UIs.height13);
-
     if (widgets.value.length > maxLines) {
       widgets.value.removeRange(0, widgets.value.length - maxLines);
     }
-    widgets.notifyListeners();
+    widgets.notify();
+
+    if (lines.length > maxLines) {
+      lines.removeRange(0, lines.length - maxLines);
+    }
   }
 
-  void clear() {
+  static void clear() {
     widgets.value.clear();
-    widgets.notifyListeners();
+    lines.clear();
+    widgets.notify();
   }
+
+  static void copy() => Pfs.copy(lines.join('\n'));
 }

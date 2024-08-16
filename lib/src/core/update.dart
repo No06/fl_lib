@@ -47,7 +47,9 @@ abstract final class AppUpdateIface {
         title: 'v1.0.$newest',
         child: SizedBox(
           width: size.width * 0.8,
-          child: SimpleMarkdown(data: changelog),
+          child: SingleChildScrollView(
+            child: SimpleMarkdown(data: changelog),
+          ),
         ),
         barrierDismiss: !force,
         actions: [

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+import 'package:fl_lib/fl_lib.dart';
 
 extension ObjectX<T> on T {
   bool get isBaseType {
@@ -11,12 +11,14 @@ extension ObjectX<T> on T {
         this is Map;
   }
 
-  List<T> get asList => [this];
+  /// Return null if this is null, otherwise return the result of [f]
+  /// 
+  /// Bad:
+  ///  - `null.nullOr(() => 1)` => `null ?? 1`
+  A? nullOr<A>(A Function() f) => this == null ? null : f();
 
-  T? nullOrSelf(bool cond) => cond ? this : null;
-
-  ValueNotifier<T> get vn => ValueNotifier<T>(this);
+  VNode<T> get vn => VNode<T>(this);
 }
 
 /// Nullable ValueNotifier -> nvn
-ValueNotifier<T?> nvn<T>() => ValueNotifier<T?>(null);
+VNode<T?> nvn<T>() => VNode<T?>(null);

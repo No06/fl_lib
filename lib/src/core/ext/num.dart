@@ -1,16 +1,17 @@
+const sizeSuffix = ['B', 'KB', 'MB', 'GB', 'TB'];
+
 extension NumX on num {
   String get bytes2Str {
-    const suffix = ['B', 'KB', 'MB', 'GB', 'TB'];
     double value = toDouble();
     int squareTimes = 0;
-    for (; value / 1024 > 1 && squareTimes < suffix.length - 1; squareTimes++) {
+    for (; value / 1024 > 1 && squareTimes < sizeSuffix.length - 1; squareTimes++) {
       value /= 1024;
     }
     var finalValue = value.toStringAsFixed(1);
     if (finalValue.endsWith('.0')) {
-      finalValue = finalValue.replaceFirst('.0', '');
+      finalValue = finalValue.substring(0, finalValue.length - 2);
     }
-    return '$finalValue ${suffix[squareTimes]}';
+    return '$finalValue ${sizeSuffix[squareTimes]}';
   }
 
   String get kb2Str => (this * 1024).bytes2Str;
@@ -18,17 +19,16 @@ extension NumX on num {
 
 extension BigIntX on BigInt {
   String get bytes2Str {
-    const suffix = ['B', 'KB', 'MB', 'GB', 'TB'];
     double value = toDouble();
     int squareTimes = 0;
-    for (; value / 1024 > 1 && squareTimes < suffix.length - 1; squareTimes++) {
+    for (; value / 1024 > 1 && squareTimes < sizeSuffix.length - 1; squareTimes++) {
       value /= 1024;
     }
     var finalValue = value.toStringAsFixed(1);
     if (finalValue.endsWith('.0')) {
       finalValue = finalValue.replaceFirst('.0', '');
     }
-    return '$finalValue ${suffix[squareTimes]}';
+    return '$finalValue ${sizeSuffix[squareTimes]}';
   }
 
   String get kb2Str => (this * BigInt.from(1024)).bytes2Str;

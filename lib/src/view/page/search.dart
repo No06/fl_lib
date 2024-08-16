@@ -50,7 +50,7 @@ final class SearchPage<T> extends SearchDelegate<T> {
   Widget _buildList(BuildContext context) {
     return FutureWidget(
       future: _search(query),
-      loading: const Center(child: UIs.centerSizedLoading),
+      loading: const Center(child: SizedLoading.centerMedium),
       error: (error, trace) {
         return Center(
           child: Text('$error\n$trace'),

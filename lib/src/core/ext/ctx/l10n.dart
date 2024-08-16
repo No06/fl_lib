@@ -6,3 +6,5 @@ import 'package:flutter/material.dart';
 extension LibL10n on BuildContext {
   void setLibL10n() => l10n = LibLocalizations.of(this) ?? LibLocalizationsEn();
 }
+
+LibLocalizations get libL10n => l10n;

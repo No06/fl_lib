@@ -14,7 +14,10 @@ import 'lib_l10n_ja.dart';
 import 'lib_l10n_nl.dart';
 import 'lib_l10n_pt.dart';
 import 'lib_l10n_ru.dart';
+import 'lib_l10n_tr.dart';
 import 'lib_l10n_zh.dart';
+
+// ignore_for_file: type=lint
 
 /// Callers can lookup localized strings with an instance of LibLocalizations
 /// returned by `LibLocalizations.of(context)`.
@@ -106,9 +109,16 @@ abstract class LibLocalizations {
     Locale('nl'),
     Locale('pt'),
     Locale('ru'),
+    Locale('tr'),
     Locale('zh'),
     Locale('zh', 'TW')
   ];
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
 
   /// No description provided for @add.
   ///
@@ -122,11 +132,41 @@ abstract class LibLocalizations {
   /// **'All'**
   String get all;
 
+  /// No description provided for @askContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'{msg}. Continue?'**
+  String askContinue(Object msg);
+
+  /// No description provided for @attention.
+  ///
+  /// In en, this message translates to:
+  /// **'Attention'**
+  String get attention;
+
   /// No description provided for @authRequired.
   ///
   /// In en, this message translates to:
   /// **'Authentication required'**
   String get authRequired;
+
+  /// No description provided for @auto.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto'**
+  String get auto;
+
+  /// No description provided for @autoCheckUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Automatic update check'**
+  String get autoCheckUpdate;
+
+  /// No description provided for @backup.
+  ///
+  /// In en, this message translates to:
+  /// **'Backup'**
+  String get backup;
 
   /// No description provided for @bioAuth.
   ///
@@ -134,11 +174,41 @@ abstract class LibLocalizations {
   /// **'Biometric authentication'**
   String get bioAuth;
 
+  /// No description provided for @bright.
+  ///
+  /// In en, this message translates to:
+  /// **'Bright'**
+  String get bright;
+
   /// No description provided for @cancel.
   ///
   /// In en, this message translates to:
   /// **'Cancel'**
   String get cancel;
+
+  /// No description provided for @clear.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear'**
+  String get clear;
+
+  /// No description provided for @clipboard.
+  ///
+  /// In en, this message translates to:
+  /// **'Clipboard'**
+  String get clipboard;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @content.
+  ///
+  /// In en, this message translates to:
+  /// **'Content'**
+  String get content;
 
   /// No description provided for @copy.
   ///
@@ -146,11 +216,53 @@ abstract class LibLocalizations {
   /// **'Copy'**
   String get copy;
 
+  /// No description provided for @dark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get dark;
+
   /// No description provided for @day.
   ///
   /// In en, this message translates to:
   /// **'Days'**
   String get day;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @device.
+  ///
+  /// In en, this message translates to:
+  /// **'Device'**
+  String get device;
+
+  /// No description provided for @disabled.
+  ///
+  /// In en, this message translates to:
+  /// **'Disabled'**
+  String get disabled;
+
+  /// No description provided for @doc.
+  ///
+  /// In en, this message translates to:
+  /// **'Documentation'**
+  String get doc;
+
+  /// No description provided for @dontShowAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t show again'**
+  String get dontShowAgain;
+
+  /// No description provided for @download.
+  ///
+  /// In en, this message translates to:
+  /// **'Download'**
+  String get download;
 
   /// No description provided for @edit.
   ///
@@ -164,11 +276,41 @@ abstract class LibLocalizations {
   /// **'Empty'**
   String get empty;
 
+  /// No description provided for @error.
+  ///
+  /// In en, this message translates to:
+  /// **'Error'**
+  String get error;
+
+  /// No description provided for @example.
+  ///
+  /// In en, this message translates to:
+  /// **'Example'**
+  String get example;
+
+  /// No description provided for @execute.
+  ///
+  /// In en, this message translates to:
+  /// **'Execute'**
+  String get execute;
+
+  /// No description provided for @exit.
+  ///
+  /// In en, this message translates to:
+  /// **'Exit'**
+  String get exit;
+
   /// No description provided for @exitConfirmTip.
   ///
   /// In en, this message translates to:
   /// **'Press back again to exit'**
   String get exitConfirmTip;
+
+  /// No description provided for @export.
+  ///
+  /// In en, this message translates to:
+  /// **'Export'**
+  String get export;
 
   /// No description provided for @fail.
   ///
@@ -176,11 +318,35 @@ abstract class LibLocalizations {
   /// **'Failure'**
   String get fail;
 
+  /// No description provided for @feedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Feedback'**
+  String get feedback;
+
   /// No description provided for @file.
   ///
   /// In en, this message translates to:
   /// **'File'**
   String get file;
+
+  /// No description provided for @fold.
+  ///
+  /// In en, this message translates to:
+  /// **'Fold'**
+  String get fold;
+
+  /// No description provided for @folder.
+  ///
+  /// In en, this message translates to:
+  /// **'Folder'**
+  String get folder;
+
+  /// No description provided for @hideTitleBar.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide title bar'**
+  String get hideTitleBar;
 
   /// No description provided for @hour.
   ///
@@ -188,11 +354,29 @@ abstract class LibLocalizations {
   /// **'Hours'**
   String get hour;
 
+  /// No description provided for @import.
+  ///
+  /// In en, this message translates to:
+  /// **'Import'**
+  String get import;
+
   /// No description provided for @key.
   ///
   /// In en, this message translates to:
   /// **'Key'**
   String get key;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @log.
+  ///
+  /// In en, this message translates to:
+  /// **'Log'**
+  String get log;
 
   /// No description provided for @minute.
   ///
@@ -200,11 +384,53 @@ abstract class LibLocalizations {
   /// **'Minutes'**
   String get minute;
 
+  /// No description provided for @name.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get name;
+
+  /// No description provided for @network.
+  ///
+  /// In en, this message translates to:
+  /// **'Network'**
+  String get network;
+
+  /// No description provided for @notExistFmt.
+  ///
+  /// In en, this message translates to:
+  /// **'{file} not exist'**
+  String notExistFmt(Object file);
+
+  /// No description provided for @note.
+  ///
+  /// In en, this message translates to:
+  /// **'Note'**
+  String get note;
+
   /// No description provided for @ok.
   ///
   /// In en, this message translates to:
   /// **'Okay'**
   String get ok;
+
+  /// No description provided for @open.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get open;
+
+  /// No description provided for @path.
+  ///
+  /// In en, this message translates to:
+  /// **'Path'**
+  String get path;
+
+  /// No description provided for @primaryColorSeed.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary color seed'**
+  String get primaryColorSeed;
 
   /// No description provided for @pwd.
   ///
@@ -218,6 +444,18 @@ abstract class LibLocalizations {
   /// **'Rename'**
   String get rename;
 
+  /// No description provided for @restore.
+  ///
+  /// In en, this message translates to:
+  /// **'Restore'**
+  String get restore;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
   /// No description provided for @second.
   ///
   /// In en, this message translates to:
@@ -230,11 +468,29 @@ abstract class LibLocalizations {
   /// **'Select'**
   String get select;
 
+  /// No description provided for @setting.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get setting;
+
+  /// No description provided for @share.
+  ///
+  /// In en, this message translates to:
+  /// **'Share'**
+  String get share;
+
   /// No description provided for @success.
   ///
   /// In en, this message translates to:
   /// **'Success'**
   String get success;
+
+  /// No description provided for @sync.
+  ///
+  /// In en, this message translates to:
+  /// **'Synchronize'**
+  String get sync;
 
   /// No description provided for @tag.
   ///
@@ -242,17 +498,53 @@ abstract class LibLocalizations {
   /// **'Tag'**
   String get tag;
 
+  /// No description provided for @tapToAuth.
+  ///
+  /// In en, this message translates to:
+  /// **'Click to verify'**
+  String get tapToAuth;
+
+  /// No description provided for @themeMode.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme mode'**
+  String get themeMode;
+
   /// No description provided for @update.
   ///
   /// In en, this message translates to:
   /// **'Update'**
   String get update;
 
+  /// No description provided for @user.
+  ///
+  /// In en, this message translates to:
+  /// **'User'**
+  String get user;
+
   /// No description provided for @value.
   ///
   /// In en, this message translates to:
   /// **'Value'**
   String get value;
+
+  /// No description provided for @versionHasUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Found: v1.0.{build}, click to update'**
+  String versionHasUpdate(Object build);
+
+  /// No description provided for @versionUnknownUpdate.
+  ///
+  /// In en, this message translates to:
+  /// **'Current: v1.0.{build}, click to check updates'**
+  String versionUnknownUpdate(Object build);
+
+  /// No description provided for @versionUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Current: v1.0.{build}, is up to date'**
+  String versionUpdated(Object build);
 
   /// No description provided for @yesterday.
   ///
@@ -270,7 +562,7 @@ class _LibLocalizationsDelegate extends LocalizationsDelegate<LibLocalizations> 
   }
 
   @override
-  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'id', 'ja', 'nl', 'pt', 'ru', 'zh'].contains(locale.languageCode);
+  bool isSupported(Locale locale) => <String>['de', 'en', 'es', 'fr', 'id', 'ja', 'nl', 'pt', 'ru', 'tr', 'zh'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_LibLocalizationsDelegate old) => false;
@@ -299,6 +591,7 @@ LibLocalizations lookupLibLocalizations(Locale locale) {
     case 'nl': return LibLocalizationsNl();
     case 'pt': return LibLocalizationsPt();
     case 'ru': return LibLocalizationsRu();
+    case 'tr': return LibLocalizationsTr();
     case 'zh': return LibLocalizationsZh();
   }
 

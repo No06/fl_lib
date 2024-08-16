@@ -1,8 +1,13 @@
 import 'lib_l10n.dart';
 
+// ignore_for_file: type=lint
+
 /// The translations for Dutch Flemish (`nl`).
 class LibLocalizationsNl extends LibLocalizations {
   LibLocalizationsNl([String locale = 'nl']) : super(locale);
+
+  @override
+  String get about => 'Over';
 
   @override
   String get add => 'Toevoegen';
@@ -11,19 +16,72 @@ class LibLocalizationsNl extends LibLocalizations {
   String get all => 'Alle';
 
   @override
+  String askContinue(Object msg) {
+    return '$msg. Doorgaan?';
+  }
+
+  @override
+  String get attention => 'Aandacht';
+
+  @override
   String get authRequired => 'Authenticatie vereist';
+
+  @override
+  String get auto => 'Auto';
+
+  @override
+  String get autoCheckUpdate => 'Automatisch controleren op update';
+
+  @override
+  String get backup => 'Back-up';
 
   @override
   String get bioAuth => 'Biometrische authenticatie';
 
   @override
+  String get bright => 'nl: Donker, Licht\n';
+
+  @override
   String get cancel => 'Annuleren';
+
+  @override
+  String get clear => 'Leegmaken';
+
+  @override
+  String get clipboard => 'Klembord';
+
+  @override
+  String get close => 'Sluiten';
+
+  @override
+  String get content => 'Inhoud';
 
   @override
   String get copy => 'Kopiëren';
 
   @override
+  String get dark => 'Donker';
+
+  @override
   String get day => 'Dagen';
+
+  @override
+  String get delete => 'Verwijderen';
+
+  @override
+  String get device => 'Apparaat';
+
+  @override
+  String get disabled => 'Uitgeschakeld';
+
+  @override
+  String get doc => 'Documentatie';
+
+  @override
+  String get dontShowAgain => 'Niet meer tonen';
+
+  @override
+  String get download => 'Downloaden';
 
   @override
   String get edit => 'Bewerken';
@@ -32,25 +90,84 @@ class LibLocalizationsNl extends LibLocalizations {
   String get empty => 'Leeg';
 
   @override
+  String get error => 'Fout';
+
+  @override
+  String get example => 'Voorbeeld';
+
+  @override
+  String get execute => 'Uitvoeren';
+
+  @override
+  String get exit => 'Afsluiten';
+
+  @override
   String get exitConfirmTip => 'Druk nogmaals op terug om te sluiten';
+
+  @override
+  String get export => 'Exporteren';
 
   @override
   String get fail => 'Mislukking';
 
   @override
+  String get feedback => 'Feedback';
+
+  @override
   String get file => 'Bestand';
+
+  @override
+  String get fold => 'Vouwen';
+
+  @override
+  String get folder => 'Map';
+
+  @override
+  String get hideTitleBar => 'Titelbalk verbergen';
 
   @override
   String get hour => 'Uren';
 
   @override
+  String get import => 'Importeren';
+
+  @override
   String get key => 'Sleutel';
+
+  @override
+  String get language => 'Taal';
+
+  @override
+  String get log => 'Logboek';
 
   @override
   String get minute => 'Minuten';
 
   @override
+  String get name => 'Naam';
+
+  @override
+  String get network => 'Netwerk';
+
+  @override
+  String notExistFmt(Object file) {
+    return '$file bestaat niet';
+  }
+
+  @override
+  String get note => 'Opmerking';
+
+  @override
   String get ok => 'Goed';
+
+  @override
+  String get open => 'Openen';
+
+  @override
+  String get path => 'Pad';
+
+  @override
+  String get primaryColorSeed => 'Basis kleurzaad';
 
   @override
   String get pwd => 'Wachtwoord';
@@ -59,22 +176,61 @@ class LibLocalizationsNl extends LibLocalizations {
   String get rename => 'Hernoemen';
 
   @override
+  String get restore => 'Herstellen';
+
+  @override
+  String get save => 'Opslaan';
+
+  @override
   String get second => 'Seconden';
 
   @override
   String get select => 'Selecteren';
 
   @override
+  String get setting => 'Instellingen';
+
+  @override
+  String get share => 'Delen';
+
+  @override
   String get success => 'Succes';
+
+  @override
+  String get sync => 'Synchroniseren';
 
   @override
   String get tag => 'Tag';
 
   @override
+  String get tapToAuth => 'Klik om te verifiëren';
+
+  @override
+  String get themeMode => 'Themamodus';
+
+  @override
   String get update => 'Bijwerken';
 
   @override
+  String get user => 'Gebruiker';
+
+  @override
   String get value => 'Waarde';
+
+  @override
+  String versionHasUpdate(Object build) {
+    return 'Gevonden: v1.0.$build, klik om bij te werken';
+  }
+
+  @override
+  String versionUnknownUpdate(Object build) {
+    return 'Huidig: v1.0.$build, klik om te kijken naar een nieuwere versie';
+  }
+
+  @override
+  String versionUpdated(Object build) {
+    return 'Huidig: v1.0.$build, is bijgewerkt naar de laatste versie';
+  }
 
   @override
   String get yesterday => 'Gisteren';

@@ -8,5 +8,18 @@ extension ContextX on BuildContext {
 
   bool get canPop => Navigator.of(this).canPop();
 
-  bool get isDark => Theme.of(this).brightness == Brightness.dark;
+  ThemeData get theme => Theme.of(this);
+
+  bool get isDark => theme.brightness == Brightness.dark;
+
+  RouteSettings? get currentRoute => ModalRoute.of(this)?.settings;
+
+  MediaQueryData get media => MediaQuery.of(this);
+
+  bool get isWide {
+    final size = media.size;
+    return size.width > size.height;
+  }
+
+  bool get isRTL => Directionality.of(this) == TextDirection.rtl;
 }

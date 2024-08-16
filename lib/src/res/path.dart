@@ -12,11 +12,15 @@ abstract final class Paths {
   static late final String video;
   static late final String img;
   static late final String cache;
+  static late final String bakName;
   static late final String bak;
   static late final String font;
 
   /// Await [Paths.init] before using any of the paths
-  static Future<void> init(String appName, {String? bakName}) async {
+  static Future<void> init(
+    String appName, {
+    String bakName = 'backup.json',
+  }) async {
     doc = await _getDoc(appName);
     dl = await _initDir('dl');
     file = await _initDir('file');
@@ -24,8 +28,9 @@ abstract final class Paths {
     video = await _initDir('video');
     img = await _initDir('img');
     cache = await _initDir('cache');
-    font = await _initPath('font.ttf');
-    bak = await _initPath(bakName ?? 'backup.json');
+    font = doc.joinPath('font.ttf');
+    Paths.bakName = bakName;
+    bak = doc.joinPath(bakName);
   }
 
   static Future<String> _getDoc(String appName) async {
@@ -36,12 +41,28 @@ abstract final class Paths {
       if (dir != null) return dir.path;
     }
 
-    final dir = await getApplicationDocumentsDirectory();
-    if (isWindows) {
-      final winDir = Platform.environment['APPDATA']?.joinPath(appName);
-      // This dir may not exist
-      return (await Directory(winDir ?? dir.path).create()).path;
+    if (isLinux || isWindows) {
+      final path = switch (Pfs.type) {
+        Pfs.linux => Platform.environment['HOME']?.joinPath('.config'),
+        Pfs.windows => Platform.environment['APPDATA'],
+        _ => null,
+      };
+      final dir = Directory(path?.joinPath(appName) ?? '.${appName}_data');
+      final p = (await dir.create()).path;
+
+      // Move the db data created wrongly in the doc dir
+      if (isLinux) {
+        // $DOC/*.hive -> $HOME/.config/$APP/*.hive
+        final wrong = await getApplicationDocumentsDirectory();
+        await for (final file in wrong.list()) {
+          if (file is! File || !file.path.endsWith('.hive')) continue;
+          file.rename(p.joinPath(file.path.split('/').last));
+        }
+      }
+      return p;
     }
+
+    final dir = await getApplicationDocumentsDirectory();
     return dir.path;
   }
 
@@ -53,9 +74,5 @@ abstract final class Paths {
       await dir.create();
     }
     return dir.path;
-  }
-
-  static Future<String> _initPath(String subPath) async {
-    return doc.joinPath(subPath);
   }
 }

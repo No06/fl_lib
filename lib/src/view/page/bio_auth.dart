@@ -17,9 +17,9 @@ final class BioAuthPageArgs {
 }
 
 final class BioAuthPage extends StatefulWidget {
-  final BioAuthPageArgs args;
+  final BioAuthPageArgs? args;
 
-  const BioAuthPage({super.key, this.args = const BioAuthPageArgs()});
+  const BioAuthPage({super.key, this.args});
 
   static const route = AppRoute<bool, BioAuthPageArgs>(
     page: BioAuthPage.new,
@@ -60,7 +60,7 @@ final class _BioAuthPageState extends State<BioAuthPage> with AfterLayoutMixin {
     switch (await BioAuth.goWithResult()) {
       case AuthResult.success:
         context.pop();
-        widget.args.onAuthSuccess?.call();
+        widget.args?.onAuthSuccess?.call();
         break;
       default:
     }
@@ -68,7 +68,7 @@ final class _BioAuthPageState extends State<BioAuthPage> with AfterLayoutMixin {
 
   @override
   FutureOr<void> afterFirstLayout(BuildContext context) async {
-    if (widget.args.autoReqAuth != false) {
+    if (widget.args?.autoReqAuth != false) {
       _reqAuth();
     }
   }

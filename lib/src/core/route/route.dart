@@ -22,7 +22,7 @@ final class AppRouteIface {
 
 /// A route with non-null arguments.
 final class AppRoute<Ret, Arg extends Object> extends AppRouteIface {
-  final Widget Function({Key? key, required Arg args}) page;
+  final Widget Function({Key? key, Arg? args}) page;
 
   /// If [middlewares] returns false, the navigation will be canceled.
   final List<bool Function(Middleware<AppRoute<Ret, Arg>>)>? middlewares;
@@ -34,30 +34,31 @@ final class AppRoute<Ret, Arg extends Object> extends AppRouteIface {
     this.middlewares,
   });
 
-  /// {@template app_route_go}
-  /// Navigate to the route.
-  /// {@endtemplate}
+  /// {@macro app_route_go}
   Future<Ret?> go(
     BuildContext context, {
     Key? key,
-    required Arg args,
+    Arg? args,
     PageRoute<Ret>? route,
   }) {
     final ret = middlewares?.any((e) => !e((context: context, route: this)));
     if (ret == true) return Future.value(null);
 
+    Widget builder(BuildContext context) =>
+        args != null ? page(key: key, args: args) : page(key: key);
+
     final route_ = route ??
         MaterialPageRoute<Ret>(
-          builder: (_) => page(key: key, args: args),
+          builder: builder,
           settings: RouteSettings(name: path),
         );
     return Navigator.push<Ret>(context, route_);
   }
 }
 
-/// A route with nullable arguments.
+/// A route with required arguments.
 final class AppRouteArg<Ret, Arg extends Object> extends AppRouteIface {
-  final Widget Function({Key? key, Arg? args}) page;
+  final Widget Function({Key? key, required Arg args}) page;
 
   /// If [middlewares] returns false, the navigation will be canceled.
   final List<bool Function(Middleware<AppRouteArg<Ret, Arg>>)>? middlewares;
@@ -71,9 +72,9 @@ final class AppRouteArg<Ret, Arg extends Object> extends AppRouteIface {
 
   /// {@macro app_route_go}
   Future<Ret?> go(
-    BuildContext context, {
+    BuildContext context,
+    Arg args, {
     Key? key,
-    Arg? args,
     PageRoute<Ret>? route,
   }) {
     final ret = middlewares?.any((e) => !e((context: context, route: this)));

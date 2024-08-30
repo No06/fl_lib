@@ -10,8 +10,7 @@ final class KvEditorArgs {
   /// display as 'key'. Keys that don't start with [prefix] will be ignored.
   /// eg.:
   /// - prefix: 'a_', data: {'a_key': 'av', 'bkey': 'bv'}, only 'key' will be
-  /// displayed. When saved, it will be saved as 'a_key'. When user input 'key',
-  /// it will be saved as 'a_key'.
+  /// displayed. When saved, it will be saved as 'a_key'.
   final String? prefix;
 
   const KvEditorArgs({
@@ -29,7 +28,7 @@ final class KvEditor extends StatefulWidget {
     required this.args,
   });
 
-  static const route = AppRoute<Map<String, String>, KvEditorArgs>(
+  static const route = AppRouteArg<Map<String, String>, KvEditorArgs>(
     page: KvEditor.new,
     path: '/kv_editor',
   );

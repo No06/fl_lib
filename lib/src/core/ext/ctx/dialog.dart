@@ -57,7 +57,7 @@ extension DialogX on BuildContext {
     Duration? timeout = const Duration(seconds: 30),
   }) async {
     showRoundDialog(
-      child: SizedLoading.centerMedium,
+      child: SizedLoading.medium,
       barrierDismiss: barrierDismiss,
     );
 
@@ -174,7 +174,7 @@ extension DialogX on BuildContext {
 
   Future<List<T>?> showPickWithTagDialog<T>({
     String? title,
-    required List<T?> Function(String? tag) itemsBuilder,
+    required List<T?> Function(String tag) itemsBuilder,
     required ValueNotifier<Set<String>> tags,
     String Function(T)? display,
     List<T>? initial,
@@ -191,28 +191,24 @@ extension DialogX on BuildContext {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ListenableBuilder(
-            listenable: tag,
-            builder: (_, __) => TagSwitcher(
-              tags: tags,
-              initTag: tag.value,
-              onTagChanged: (e) => tag.value = e,
-            ),
+          TagSwitcher(
+            tags: tags,
+            initTag: tag.value,
+            onTagChanged: (e) => tag.value = e,
           ),
           const Divider(color: Color.fromARGB(30, 158, 158, 158)),
           ConstrainedBox(
             constraints: BoxConstraints(maxHeight: media.size.height * 0.5),
             child: SingleChildScrollView(
-              child: ValBuilder(
-                listenable: tag,
-                builder: (val) {
-                  final items = itemsBuilder(val);
+              child: tag.listenVal(
+                (tVal) {
                   return Choice<T>(
                     onChanged: (value) => vals = value,
                     multiple: multi,
                     clearable: clearable,
                     value: vals,
                     builder: (state, _) {
+                      final items = itemsBuilder(tVal);
                       return Wrap(
                         children: List<Widget>.generate(
                           items.length,

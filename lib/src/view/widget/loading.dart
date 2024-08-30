@@ -13,15 +13,13 @@ final class SizedLoading extends StatelessWidget {
     return SizedBox(
       width: size,
       height: size,
-      child: const CircularProgressIndicator(),
+      child: const Center(
+        child: CircularProgressIndicator(),
+      ),
     );
   }
 
   static const small = SizedLoading(size: 20);
-  static const medium = SizedLoading(size: 30);
-  static const large = SizedLoading(size: 40);
-
-  static const centerSmall = Center(child: small);
-  static const centerMedium = Center(child: medium);
-  static const centerLarge = Center(child: large);
+  static const medium = SizedLoading(size: 50);
+  static const large = SizedLoading(size: 70);
 }

@@ -13,12 +13,15 @@ final class IntroPageArgs {
 final class IntroPage extends StatefulWidget {
   final IntroPageArgs args;
 
-  const IntroPage({super.key, required this.args});
+  const IntroPage({
+    super.key,
+    required this.args,
+  });
 
   @override
   State<IntroPage> createState() => _IntroPageState();
 
-  static const route = AppRoute<void, IntroPageArgs>(
+  static const route = AppRouteArg<void, IntroPageArgs>(
     page: IntroPage.new,
     path: '/intro',
   );

@@ -11,9 +11,9 @@ final class DebugPageArgs {
 }
 
 class DebugPage extends StatelessWidget {
-  final DebugPageArgs args;
+  final DebugPageArgs? args;
 
-  const DebugPage({super.key, required this.args});
+  const DebugPage({super.key, this.args});
 
   static const route = AppRoute<void, DebugPageArgs>(
     page: DebugPage.new,
@@ -30,7 +30,7 @@ class DebugPage extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
         ),
         title: Text(
-          args.title ?? l10n.log,
+          args?.title ?? l10n.log,
           style: const TextStyle(color: Colors.white),
         ),
         backgroundColor: Colors.black,

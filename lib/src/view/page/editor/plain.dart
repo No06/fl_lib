@@ -12,9 +12,9 @@ final class PlainEditPageArgs {
 }
 
 class PlainEditPage extends StatefulWidget {
-  final PlainEditPageArgs args;
+  final PlainEditPageArgs? args;
 
-  const PlainEditPage({super.key, required this.args});
+  const PlainEditPage({super.key, this.args});
 
   static const route = AppRoute<String, PlainEditPageArgs>(
     page: PlainEditPage.new,
@@ -26,7 +26,8 @@ class PlainEditPage extends StatefulWidget {
 }
 
 class _FullscreenEditWidgetState extends State<PlainEditPage> {
-  late final _controller = TextEditingController(text: widget.args.initialText);
+  late final _controller =
+      TextEditingController(text: widget.args?.initialText ?? '');
 
   @override
   void dispose() {
@@ -49,7 +50,7 @@ class _FullscreenEditWidgetState extends State<PlainEditPage> {
       },
       child: Scaffold(
         appBar: CustomAppBar(
-          title: Text(widget.args.title ?? libL10n.edit),
+          title: Text(widget.args?.title ?? libL10n.edit),
           actions: [
             IconButton(
               icon: const Icon(Icons.save),

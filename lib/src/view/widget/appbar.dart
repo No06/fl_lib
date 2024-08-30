@@ -101,7 +101,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Size get preferredSize {
-    const height = kToolbarHeight - 10;
+    const height = kToolbarHeight - 13;
     if (barHeight == null) return const Size.fromHeight(height);
     return Size.fromHeight(barHeight! + height);
   }

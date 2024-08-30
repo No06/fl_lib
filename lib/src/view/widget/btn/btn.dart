@@ -188,7 +188,6 @@ final class Btn extends StatelessWidget {
     super.key,
     this.onTap = _defaultOnTap,
     bool red = false,
-    borderRadius = _kBorderRadius,
   })  : text = l10n.ok,
         icon = null,
         type = BtnType.text,
@@ -206,7 +205,6 @@ final class Btn extends StatelessWidget {
   Btn.cancel({
     super.key,
     this.onTap = _defaultOnTap,
-    borderRadius = _kBorderRadius,
   })  : text = l10n.cancel,
         icon = null,
         type = BtnType.text,

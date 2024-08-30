@@ -5,17 +5,25 @@ import 'package:flutter/material.dart';
 import 'package:icons_plus/icons_plus.dart';
 
 const _kTagBtnHeight = 45.0;
+const kDefaultTag = '';
 
+/// A wrapped switcher for multiple tags.
+///
+/// {@template tag-swicther-empty}
+/// [kDefaultTag] (empty string) indicates all tags.
+/// {@endtemplate}
 class TagSwitcher extends StatelessWidget implements PreferredSizeWidget {
   final ValueNotifier<Set<String>> tags;
   final void Function(String) onTagChanged;
+
+  /// {@macro tag-swicther-empty}
   final String initTag;
 
   const TagSwitcher({
     super.key,
     required this.tags,
     required this.onTagChanged,
-    this.initTag = '',
+    this.initTag = kDefaultTag,
   });
 
   @override
@@ -23,7 +31,7 @@ class TagSwitcher extends StatelessWidget implements PreferredSizeWidget {
     final choice = tags.listenVal(
       (vals) {
         if (vals.isEmpty) return UIs.placeholder;
-        final items = <String>['', ...vals];
+        final items = <String>[kDefaultTag, ...vals];
         return Choice<String>(
           multiple: false,
           clearable: false,
@@ -35,13 +43,10 @@ class TagSwitcher extends StatelessWidget implements PreferredSizeWidget {
                 (index) {
                   final item = items[index];
                   return ChoiceChipX<String>(
-                    outPadding:
-                        EdgeInsets.only(right: 5, top: isDesktop ? 7 : 0),
-                    padding: const EdgeInsets.only(
-                        left: 10, right: 13, bottom: 6, top: 6),
-                    labelPadding: EdgeInsets.zero,
-                    showCheckmark: true,
-                    label: item.isEmpty ? libL10n.all : '$item ',
+                    outPadding: const EdgeInsets.only(right: 5),
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    showCheckmark: false,
+                    label: item.isEmpty ? libL10n.all : '#$item',
                     state: state,
                     value: item,
                     onSelected: (val, _) => onTagChanged(val),

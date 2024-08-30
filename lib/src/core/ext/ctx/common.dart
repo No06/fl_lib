@@ -12,12 +12,15 @@ extension ContextX on BuildContext {
 
   bool get isDark => theme.brightness == Brightness.dark;
 
-  RouteSettings? get currentRoute => ModalRoute.of(this)?.settings;
+  RouteSettings? get route => ModalRoute.of(this)?.settings;
 
   MediaQueryData get media => MediaQuery.of(this);
 
+  // Use [MediaQuery.sizeOf] for better performance.
+  Size get windowSize => MediaQuery.sizeOf(this);
+
   bool get isWide {
-    final size = media.size;
+    final size = windowSize;
     return size.width > size.height;
   }
 
